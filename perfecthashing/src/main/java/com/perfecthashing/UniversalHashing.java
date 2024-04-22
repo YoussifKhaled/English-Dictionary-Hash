@@ -53,7 +53,7 @@ public class UniversalHashing {
             hash |= hashX[i];
         }
 
-        return hash;
+        return Math.abs(hash);
     }
 
 }
