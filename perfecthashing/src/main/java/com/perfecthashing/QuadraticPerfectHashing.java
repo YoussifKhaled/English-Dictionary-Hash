@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QuadraticPerfectHashing {
+public class QuadraticPerfectHashing<T> {
     private UniversalHashing hashFunction;
-    private Set<String> set;
+    private Set<T> set;
     private int[] table;
     private int size;
     private boolean isRehashing = false;
@@ -15,16 +15,16 @@ public class QuadraticPerfectHashing {
         hashFunction = new UniversalHashing(32, 32);
         size = N*N;
         table = new int[size];
-        set = new HashSet<String>();
+        set = new HashSet<T>();
     }
 
-    public int insert(String s){
-        int hash = hashFunction.hash(StringUtls.getStringKey(s));
+    public int insert(T item){
+        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
         int pos = hash%size;
-        if(!isRehashing && set.contains(s)){
+        if(!isRehashing && set.contains(item)){
             return 3;
         }
-        set.add(s);
+        set.add(item);
         if(table[pos] != 0){
             rehash();
             isRehashing = false;
@@ -34,8 +34,8 @@ public class QuadraticPerfectHashing {
         return 0;
     } 
 
-    public int delete(String s){
-        int hash = hashFunction.hash(StringUtls.getStringKey(s));
+    public int delete(T item){
+        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
         int pos = hash%size;
         if(table[pos] == 0){
             return 1;
@@ -45,8 +45,8 @@ public class QuadraticPerfectHashing {
         return 0;
     }
 
-    public boolean search(String s){
-        int hash = hashFunction.hash(StringUtls.getStringKey(s));
+    public boolean search(T item){
+        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
         int pos = hash%size;
         return (table[pos] != 0);
     }
@@ -55,7 +55,7 @@ public class QuadraticPerfectHashing {
         isRehashing = true;
         table = new int[size];
         hashFunction = new UniversalHashing(32, 32);
-        for(String x : set){
+        for(T x : set){
             insert(x);
         }
     }
@@ -72,5 +72,8 @@ public class QuadraticPerfectHashing {
         System.out.println(m.search("bye"));
         System.out.println(m.search("kool"));
     }
+    
+    //return 1 ==> not exist in table
+    //return 3 ==> already in table
 
 }
