@@ -63,7 +63,7 @@ public class LinearPerfectHashing<T> {
             HashSet<T> secondLevelTable = secondLevelTables.get(i);
             int secondLevelSize = secondLevelTable.size();
             tableSizes.put(i + 1, secondLevelSize);  // size of each second-level table
-            System.out.println("Size of second-level table " + (i + 1) + ": " + secondLevelSize);
+            //System.out.println("Size of second-level table " + (i + 1) + ": " + secondLevelSize);
         }
         return tableSizes;
     }
@@ -76,19 +76,34 @@ public class LinearPerfectHashing<T> {
             return secondLevelTable.contains(item);
         }
         return false;
-    }
+        }
     public static void main(String[] args) {
-        LinearPerfectHashing<Integer> hashing = new LinearPerfectHashing<>(10);
-        LinearPerfectHashing<String> hashings = new LinearPerfectHashing<>(10);
-        for (int i = 1; i <= 10; i++) {
-            hashing.insert(i);
-        }
-        hashings.insert("zbi");
-        hashings.delete("zbi");
-        for (int i = 1; i <= 10; i++) {
-            System.out.println("Searching for " + i + ": " + hashing.search(i));
-        }
-        System.out.println("Searching for zbi: " + hashings.search("zbi"));
-        System.out.println("Searching for 11: " + hashing.search(11));
+        // Create an instance of the class
+        int n = 40;
+        LinearPerfectHashing<String> lph = new LinearPerfectHashing<>(n);
+
+        // Insert some values
+        lph.insert("apple");
+        lph.insert("banana");
+        lph.insert("cherry");
+
+        // Check if the values exist
+        System.out.println("Contains apple: " + lph.search("apple"));
+        System.out.println("Contains banana: " + lph.search("banana"));
+        System.out.println("Contains cherry: " + lph.search("cherry"));
+
+        // Delete some values
+        lph.delete("apple");
+        lph.delete("cherry");
+
+        // Check if the values exist after deletion
+        System.out.println("Contains apple: " + lph.search("apple"));
+        System.out.println("Contains banana: " + lph.search("banana"));
+        System.out.println("Contains cherry: " + lph.search("cherry"));
+
+        // Print the size of the hash table and the number of rehashes
+
+        System.out.println("Size of hash table: " + lph.getTableSizes());
+        System.out.println("Number of rehashes: " + lph.getRehashCount());
     }
 }
