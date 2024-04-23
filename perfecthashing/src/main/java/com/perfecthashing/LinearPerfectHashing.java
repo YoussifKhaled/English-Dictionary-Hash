@@ -1,7 +1,9 @@
 package com.perfecthashing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class LinearPerfectHashing<T> {
@@ -10,6 +12,7 @@ public class LinearPerfectHashing<T> {
     private ArrayList<HashSet<T>> secondLevelTables;
     private Set<T> set;
     private int size;
+    private int rehashCount;
 
     public LinearPerfectHashing(int N){
         firstLevelHashFunction = new UniversalHashing(32, 32);
@@ -21,6 +24,7 @@ public class LinearPerfectHashing<T> {
         }
         size = N;
         set = new HashSet<>();
+        rehashCount = 0;
     }
 
     public void insert(T item){
@@ -32,6 +36,7 @@ public class LinearPerfectHashing<T> {
             int secondLevelSize = secondLevelTable.size() * secondLevelTable.size();
             UniversalHashing secondLevelHashFunction = new UniversalHashing(32, secondLevelSize);
             secondLevelHashFunctions.set(firstLevelHash, secondLevelHashFunction);
+            rehashCount++;
         }
     }
 
@@ -44,6 +49,23 @@ public class LinearPerfectHashing<T> {
             return true;
         }
         return false;
+    }
+
+    public int getRehashCount() {
+        return rehashCount;
+    }
+
+    public Map<Integer, Integer> getTableSizes() {
+        Map<Integer, Integer> tableSizes = new HashMap<>();
+        tableSizes.put(0, size);  // size of the first-level table
+        System.out.println("Size of first-level table: " + size);
+        for (int i = 0; i < size; i++) {
+            HashSet<T> secondLevelTable = secondLevelTables.get(i);
+            int secondLevelSize = secondLevelTable.size();
+            tableSizes.put(i + 1, secondLevelSize);  // size of each second-level table
+            System.out.println("Size of second-level table " + (i + 1) + ": " + secondLevelSize);
+        }
+        return tableSizes;
     }
 
     public boolean search(T item){
