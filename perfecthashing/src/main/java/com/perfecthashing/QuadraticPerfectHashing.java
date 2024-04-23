@@ -1,13 +1,11 @@
 package com.perfecthashing;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class QuadraticPerfectHashing<T> {
+public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     private UniversalHashing hashFunction;
-    private Set<T> set;
+    private ArrayList<T> set;
     private List<T> table;
     private int size;
     private boolean isRehashing = false;
@@ -17,7 +15,7 @@ public class QuadraticPerfectHashing<T> {
         size = N*N;
         table = new ArrayList<T>(size);
         initTable();
-        set = new HashSet<T>();
+        set = new ArrayList<>();
     }
 
     public int insert(T item){
@@ -69,21 +67,7 @@ public class QuadraticPerfectHashing<T> {
         }
     }
 
-
-    public static void main(String[] args) {
-        QuadraticPerfectHashing m = new QuadraticPerfectHashing(4);
-        System.out.println(m.table.size());
-        System.out.println(m.insert("hii"));
-        System.out.println(m.insert("hii"));
-        //System.out.println(m.insert("kool"));
-        System.out.println(m.delete("kool"));
-        //System.out.println(m.delete("hii"));
-        System.out.println(m.search("hii"));
-        System.out.println(m.search("bye"));
-        System.out.println(m.search("kool"));
+    public ArrayList<T> getElements(){
+        return set;
     }
-    
-    //return 1 ==> not exist in table
-    //return 3 ==> already in table
-
 }

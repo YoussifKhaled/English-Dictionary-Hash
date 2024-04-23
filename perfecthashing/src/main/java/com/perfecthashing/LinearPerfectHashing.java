@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-public class LinearPerfectHashing<T> {
+public class LinearPerfectHashing<T> implements PerfectHashing<T>{
     private UniversalHashing firstLevelHashFunction;
+    private ArrayList<T> set;
     private ArrayList<UniversalHashing> secondLevelHashFunctions;
     private ArrayList<HashSet<T>> secondLevelTables;
-    private Set<T> set;
     private int size;
     private int rehashCount;
 
@@ -23,11 +22,11 @@ public class LinearPerfectHashing<T> {
             secondLevelTables.add(new HashSet<>());
         }
         size = N;
-        set = new HashSet<>();
+        set = new ArrayList<>();
         rehashCount = 0;
     }
 
-    public void insert(T item){
+    public int insert(T item){
         int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
         if (!set.contains(item)) {
             set.add(item);
@@ -37,16 +36,28 @@ public class LinearPerfectHashing<T> {
             UniversalHashing secondLevelHashFunction = new UniversalHashing(32, secondLevelSize);
             secondLevelHashFunctions.set(firstLevelHash, secondLevelHashFunction);
             rehashCount++;
+            return 0;
         }
+        return 3;
     }
 
-    public boolean delete(T item){
+    public int delete(T item){
         int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
-        if (set.contains(item)) {
+        if(set.contains(item)){
             set.remove(item);
             HashSet<T> secondLevelTable = secondLevelTables.get(firstLevelHash);
             secondLevelTable.remove(item);
-            return true;
+            return 0;
+        }
+        return 1;
+    }
+    
+    public boolean search(T item){
+        int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
+        HashSet<T> secondLevelTable = secondLevelTables.get(firstLevelHash);
+        UniversalHashing secondLevelHashFunction = secondLevelHashFunctions.get(firstLevelHash);
+        if (secondLevelHashFunction != null) {
+            return secondLevelTable.contains(item);
         }
         return false;
     }
@@ -68,42 +79,7 @@ public class LinearPerfectHashing<T> {
         return tableSizes;
     }
 
-    public boolean search(T item){
-        int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
-        HashSet<T> secondLevelTable = secondLevelTables.get(firstLevelHash);
-        UniversalHashing secondLevelHashFunction = secondLevelHashFunctions.get(firstLevelHash);
-        if (secondLevelHashFunction != null) {
-            return secondLevelTable.contains(item);
-        }
-        return false;
-        }
-    public static void main(String[] args) {
-        // Create an instance of the class
-        int n = 40;
-        LinearPerfectHashing<String> lph = new LinearPerfectHashing<>(n);
-
-        // Insert some values
-        lph.insert("apple");
-        lph.insert("banana");
-        lph.insert("cherry");
-
-        // Check if the values exist
-        System.out.println("Contains apple: " + lph.search("apple"));
-        System.out.println("Contains banana: " + lph.search("banana"));
-        System.out.println("Contains cherry: " + lph.search("cherry"));
-
-        // Delete some values
-        lph.delete("apple");
-        lph.delete("cherry");
-
-        // Check if the values exist after deletion
-        System.out.println("Contains apple: " + lph.search("apple"));
-        System.out.println("Contains banana: " + lph.search("banana"));
-        System.out.println("Contains cherry: " + lph.search("cherry"));
-
-        // Print the size of the hash table and the number of rehashes
-
-        System.out.println("Size of hash table: " + lph.getTableSizes());
-        System.out.println("Number of rehashes: " + lph.getRehashCount());
+    public ArrayList<T> getElements(){
+        return set;
     }
 }
