@@ -35,6 +35,17 @@ public class LinearPerfectHashing<T> {
         }
     }
 
+    public boolean delete(T item){
+        int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
+        if (set.contains(item)) {
+            set.remove(item);
+            HashSet<T> secondLevelTable = secondLevelTables.get(firstLevelHash);
+            secondLevelTable.remove(item);
+            return true;
+        }
+        return false;
+    }
+
     public boolean search(T item){
         int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
         HashSet<T> secondLevelTable = secondLevelTables.get(firstLevelHash);
@@ -46,12 +57,16 @@ public class LinearPerfectHashing<T> {
     }
     public static void main(String[] args) {
         LinearPerfectHashing<Integer> hashing = new LinearPerfectHashing<>(10);
+        LinearPerfectHashing<String> hashings = new LinearPerfectHashing<>(10);
         for (int i = 1; i <= 10; i++) {
             hashing.insert(i);
         }
+        hashings.insert("zbi");
+        hashings.delete("zbi");
         for (int i = 1; i <= 10; i++) {
             System.out.println("Searching for " + i + ": " + hashing.search(i));
         }
+        System.out.println("Searching for zbi: " + hashings.search("zbi"));
         System.out.println("Searching for 11: " + hashing.search(11));
     }
 }
