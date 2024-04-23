@@ -39,7 +39,7 @@ public class QuadraticPerfectHashing<T> {
     public int delete(T item){
         int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
         int pos = hash%size;
-        if(!table.get(pos).equals(item)){
+        if(table.get(pos) == null || !table.get(pos).equals(item)){
             return 1;
         }
         table.add(pos, null);
@@ -75,7 +75,7 @@ public class QuadraticPerfectHashing<T> {
         System.out.println(m.table.size());
         System.out.println(m.insert("hii"));
         System.out.println(m.insert("hii"));
-        System.out.println(m.insert("kool"));
+        //System.out.println(m.insert("kool"));
         System.out.println(m.delete("kool"));
         //System.out.println(m.delete("hii"));
         System.out.println(m.search("hii"));
