@@ -10,6 +10,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     private mySet<T> set;
     private List<T> table;
     private int size;
+    private int rehashCount;
     private boolean isRehashing = false;
 
     public QuadraticPerfectHashing(int N){
@@ -61,6 +62,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
             insert(x);
         }
         isRehashing = false;
+        rehashCount++;
     }
 
     private void initTable(){
@@ -87,7 +89,14 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     public ArrayList<T> getElements(){
         return (ArrayList<T>) set.getList();
     }
-    
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getRehashCount() {
+        return rehashCount;
+    }
     //return 1 ==> not exist in table
     //return 3 ==> already in table
 

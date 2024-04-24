@@ -1,3 +1,4 @@
+import com.perfecthashing.LinearPerfectHashing;
 import com.perfecthashing.QuadraticPerfectHashing;
 import org.junit.Test;
 
@@ -94,6 +95,24 @@ public class QuadraticPerfectHashingTest {
         assertEquals(3,quadraticPerfectHashingString.insert("a"));
         assertEquals(0,quadraticPerfectHashingString.delete("a"));
         assertFalse(quadraticPerfectHashingString.search("a"));
-        
+    }
+    @Test
+    public void rehashCountRandomIntegerTest(){
+        Random random=new Random();
+        int numberOfElements=5000;
+        QuadraticPerfectHashing<Integer> quadraticPerfectHashing
+                =new QuadraticPerfectHashing<>(5000);
+        ArrayList<Integer>integers=new ArrayList<>();
+        for (int i=0;i<numberOfElements;i++){
+            integers.add(random.nextInt());
+        }
+        long startTime=System.currentTimeMillis();
+        for (int i:integers){
+            quadraticPerfectHashing.insert(i);
+        }
+        long endTime=System.currentTimeMillis();
+        System.out.println("time "+(endTime-startTime));
+        System.out.println("rehash count "+quadraticPerfectHashing.getRehashCount());
+
     }
 }
