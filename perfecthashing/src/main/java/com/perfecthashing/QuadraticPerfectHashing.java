@@ -81,11 +81,11 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         return rehashedSize;
     }
 
-    public int getDeletedItems(){
+    public int getDeletedItemsSize(){
         return deletedItems;
     }
 
-    public int getHashedItems(){
+    public int getHashedItemsSize(){
         return set.size();
     }
 
