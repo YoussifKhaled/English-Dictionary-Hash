@@ -1,7 +1,7 @@
 package com.perfecthashing;
 
 public class StringUtls {
-    
+
     public static int getStringKey(String s){
         int res=0;
 
@@ -11,6 +11,5 @@ public class StringUtls {
 
         return res;
     }
-    
-}
 
+}

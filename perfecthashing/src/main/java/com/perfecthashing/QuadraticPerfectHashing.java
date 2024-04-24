@@ -1,11 +1,13 @@
 package com.perfecthashing;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     private UniversalHashing hashFunction;
-    private ArrayList<T> set;
+    private mySet<T> set;
     private List<T> table;
     private int size;
     private boolean isRehashing = false;
@@ -15,11 +17,11 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         size = N*N;
         table = new ArrayList<T>(size);
         initTable();
-        set = new ArrayList<>();
+        set = new mySet<T>();
     }
 
     public int insert(T item){
-        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
+        int hash = hashFunction.hash(item.hashCode());
         int pos = hash%size;
         if(!isRehashing && set.contains(item)){
             return 3;
@@ -27,47 +29,66 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         set.add(item);
         if(table.get(pos) != null){
             rehash();
-            isRehashing = false;
         }
-        table.add(pos, item);
+        table.set(pos, item);
        
         return 0;
     } 
 
     public int delete(T item){
-        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
+        int hash = hashFunction.hash(item.hashCode());
         int pos = hash%size;
         if(table.get(pos) == null || !table.get(pos).equals(item)){
             return 1;
         }
-        table.add(pos, null);
+        table.set(pos, null);
+        set.remove(item);
 
         return 0;
     }
 
     public boolean search(T item){
-        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
+        int hash = hashFunction.hash(item.hashCode());
         int pos = hash%size;
         return (table.get(pos) != null && table.get(pos).equals(item));
     }
 
     private void rehash(){
         isRehashing = true;
-        table = new ArrayList<T>(size);
         initTable();
         hashFunction = new UniversalHashing(32, 32);
         for(T x : set){
             insert(x);
         }
+        isRehashing = false;
     }
 
     private void initTable(){
-        for(int i=0;i<size;i++){
-            table.add(null);
-        }
+        table = new ArrayList<>(Collections.nCopies(size, null));
     }
 
-    public ArrayList<T> getElements(){
-        return set;
+
+    public static void main(String[] args) {
+        QuadraticPerfectHashing m = new QuadraticPerfectHashing(1000);
+        for (int i = 1; i <= 1000; i++) {
+            m.insert(i);
+            System.out.println(i);
+        }
+
+        for (int i = 1; i <= 500; i++) {
+            m.delete(i);
+        }
+        int sum = 0;
+        for (int i = 1; i <= 1000; i++) {
+            if (m.search(i)) sum++;
+        }
+        System.out.println(sum);
     }
+    public ArrayList<T> getElements(){
+        return (ArrayList<T>) set.getList();
+    }
+    
+    //return 1 ==> not exist in table
+    //return 3 ==> already in table
+
 }
