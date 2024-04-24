@@ -3,6 +3,7 @@ package com.perfecthashing;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class QuadraticPerfectHashing<T> implements PerfectHashing<T> {
     private UniversalHashing hashFunction;
     private ArrayList<T> set;
@@ -29,10 +30,8 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T> {
         set.add(item);
         if (table.get(pos) != null) {
             rehash();
-            isRehashing = false;
         }
         table.set(pos, item);
-
         return 0;
     }
 
@@ -43,7 +42,6 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T> {
             return 1;
         }
         table.set(pos, null);
-
         return 0;
     }
 
@@ -56,12 +54,22 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T> {
     private void rehash() {
         rehashCount++;
         isRehashing = true;
-        List<T> newTable = new ArrayList<>(size);
-        initTable();
-        hashFunction = new UniversalHashing(32, 32);
-        for (T x : set) {
-            insert(x);
+        int newSize = size * 2; // Double the size for rehashing
+        List<T> newTable = new ArrayList<>(newSize);
+        for (int i = 0; i < newSize; i++) {
+            newTable.add(null);
         }
+        for (T x : set) {
+            int hash = hashFunction.hash(StringUtls.getStringKey(x.toString()));
+            int pos = hash % newSize;
+            while (newTable.get(pos) != null) {
+                pos = (pos + 1) % newSize; // Linear probing to resolve collisions
+            }
+            newTable.set(pos, x);
+        }
+        table = newTable;
+        size = newSize;
+        isRehashing = false;
     }
 
     private void initTable() {
