@@ -85,7 +85,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         return deletedItems;
     }
 
-    public int getHasedItems(){
+    public int getHashedItems(){
         return set.size();
     }
 
