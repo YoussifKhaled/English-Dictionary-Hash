@@ -1,96 +1,113 @@
 package com.perfecthashing;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-
-public class QuadraticPerfectHashing<T> implements PerfectHashing<T> {
+public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     private UniversalHashing hashFunction;
-    private ArrayList<T> set;
+    private mySet<T> set;
     private List<T> table;
     private int size;
-    private int rehashCount;
     private boolean isRehashing = false;
+    private int rehashedSize;
+    private int deletedItems;
 
-    public QuadraticPerfectHashing(int N) {
+    public QuadraticPerfectHashing(int N){
         hashFunction = new UniversalHashing(32, 32);
-        size = N * N;
-        table = new ArrayList<>(size);
+        size = N*N;
+        table = new ArrayList<T>(size);
         initTable();
-        set = new ArrayList<>();
-        rehashCount = 0;
+        set = new mySet<T>();
+        rehashedSize = 0;
+        deletedItems = 0;
     }
 
-    public int insert(T item) {
-        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
-        int pos = hash % size;
-        if (!isRehashing && set.contains(item)) {
+    public int insert(T item){
+        int hash = hashFunction.hash(item.hashCode());
+        int pos = hash%size;
+        if(!isRehashing && set.contains(item)){
             return 3;
         }
         set.add(item);
-        if (table.get(pos) != null) {
+        if(table.get(pos) != null){
             rehash();
         }
         table.set(pos, item);
+       
         return 0;
-    }
+    } 
 
-    public int delete(T item) {
-        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
-        int pos = hash % size;
-        if (table.get(pos) == null || !table.get(pos).equals(item)) {
+    public int delete(T item){
+        int hash = hashFunction.hash(item.hashCode());
+        int pos = hash%size;
+        if(table.get(pos) == null || !table.get(pos).equals(item)){
             return 1;
         }
         table.set(pos, null);
+        set.remove(item);
+        deletedItems++;
+
         return 0;
     }
 
-    public boolean search(T item) {
-        int hash = hashFunction.hash(StringUtls.getStringKey(item.toString()));
-        int pos = hash % size;
+    public boolean search(T item){
+        int hash = hashFunction.hash(item.hashCode());
+        int pos = hash%size;
         return (table.get(pos) != null && table.get(pos).equals(item));
     }
 
-    private void rehash() {
-        rehashCount++;
+    private void rehash(){
+        rehashedSize++;
         isRehashing = true;
-        int newSize = size * 2; // Double the size for rehashing
-        List<T> newTable = new ArrayList<>(newSize);
-        for (int i = 0; i < newSize; i++) {
-            newTable.add(null);
+        initTable();
+        hashFunction = new UniversalHashing(32, 32);
+        for(T x : set){
+            insert(x);
         }
-        for (T x : set) {
-            int hash = hashFunction.hash(StringUtls.getStringKey(x.toString()));
-            int pos = hash % newSize;
-            while (newTable.get(pos) != null) {
-                pos = (pos + 1) % newSize; // Linear probing to resolve collisions
-            }
-            newTable.set(pos, x);
-        }
-        table = newTable;
-        size = newSize;
         isRehashing = false;
     }
 
-    private void initTable() {
-        for (int i = 0; i < size; i++) {
-            table.add(null);
+    private void initTable(){
+        table = new ArrayList<>(Collections.nCopies(size, null));
+    }
+
+    public ArrayList<T> getElements(){
+        return (ArrayList<T>) set.getList();
+    }
+
+    public int getRehashedSize() {
+        return rehashedSize;
+    }
+
+    public int getDeletedItemsSize(){
+        return deletedItems;
+    }
+
+    public int getHashedItemsSize(){
+        return set.size();
+    }
+
+
+    public static void main(String[] args) {
+        QuadraticPerfectHashing m = new QuadraticPerfectHashing(1000);
+        for (int i = 1; i <= 1000; i++) {
+            m.insert(i);
+            System.out.println(i);
         }
-    }
 
-    public ArrayList<T> getElements() {
-        return set;
+        for (int i = 1; i <= 500; i++) {
+            m.delete(i);
+        }
+        int sum = 0;
+        for (int i = 1; i <= 1000; i++) {
+            if (m.search(i)) sum++;
+        }
+        System.out.println(sum);
     }
+    
+    
+    //return 1 ==> not exist in table
+    //return 3 ==> already in table
 
-    public int getRehashCount() {
-        return rehashCount;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public List<T> getTable() {
-        return table;
-    }
 }
