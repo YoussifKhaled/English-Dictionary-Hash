@@ -11,6 +11,8 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     private List<T> table;
     private int size;
     private boolean isRehashing = false;
+    private int rehashedSize;
+    private int deletedItems;
 
     public QuadraticPerfectHashing(int N){
         hashFunction = new UniversalHashing(32, 32);
@@ -18,6 +20,8 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         table = new ArrayList<T>(size);
         initTable();
         set = new mySet<T>();
+        rehashedSize = 0;
+        deletedItems = 0;
     }
 
     public int insert(T item){
@@ -43,6 +47,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         }
         table.set(pos, null);
         set.remove(item);
+        deletedItems++;
 
         return 0;
     }
@@ -54,6 +59,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
     }
 
     private void rehash(){
+        rehashedSize++;
         isRehashing = true;
         initTable();
         hashFunction = new UniversalHashing(32, 32);
@@ -65,6 +71,22 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
 
     private void initTable(){
         table = new ArrayList<>(Collections.nCopies(size, null));
+    }
+
+    public ArrayList<T> getElements(){
+        return (ArrayList<T>) set.getList();
+    }
+
+    public int getRehashedSize() {
+        return rehashedSize;
+    }
+
+    public int getDeletedItems(){
+        return deletedItems;
+    }
+
+    public int getHasedItems(){
+        return set.size();
     }
 
 
@@ -84,9 +106,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         }
         System.out.println(sum);
     }
-    public ArrayList<T> getElements(){
-        return (ArrayList<T>) set.getList();
-    }
+    
     
     //return 1 ==> not exist in table
     //return 3 ==> already in table

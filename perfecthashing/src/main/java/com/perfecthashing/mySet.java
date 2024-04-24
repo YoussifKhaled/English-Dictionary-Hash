@@ -30,6 +30,10 @@ public class mySet<T> implements Iterable<T> {
         return list.contains(item);
     }
 
+    public int size(){
+        return list.size();
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new myIterator();
