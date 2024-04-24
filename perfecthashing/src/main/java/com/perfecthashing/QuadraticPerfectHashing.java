@@ -2,7 +2,6 @@ package com.perfecthashing;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
@@ -20,7 +19,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         initTable();
         set = new mySet<T>();
     }
-
+/* 
     public int insert(T item){
         int hash = hashFunction.hash(item.hashCode());
         int pos = hash%size;
@@ -35,7 +34,24 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
        
         return 0;
     } 
+*/
 
+    public int insert(T item){
+        int hash = hashFunction.hash(item.hashCode());
+        int pos = hash%size;
+        if(!isRehashing && set.contains(item)){
+            return 3;
+        }
+        set.add(item);
+        if(table.get(pos) != null && !isRehashing){
+            rehash();
+            // After rehashing, we need to insert the item again
+            return insert(item);
+        }
+        table.set(pos, item);
+    
+        return 0;
+    } 
     public int delete(T item){
         int hash = hashFunction.hash(item.hashCode());
         int pos = hash%size;
