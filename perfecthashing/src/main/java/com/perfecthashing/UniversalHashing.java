@@ -42,8 +42,9 @@ public class UniversalHashing {
             int sum=0;
             for(int j=0;j<u;j++){
                 sum += matrix[i][j] * keyBinary[j]; 
-                sum = sum%2;
+                
             }
+            sum = sum%2;
             hashX[i] = sum;
         }
 
