@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class QuadraticPerfectHashing<T> {
     private UniversalHashing hashFunction;
-    private Set<T> set;
+    private mySet<T> set;
     private List<T> table;
     private int size;
     private boolean isRehashing = false;
@@ -18,7 +18,7 @@ public class QuadraticPerfectHashing<T> {
         size = N*N;
         table = new ArrayList<T>(size);
         initTable();
-        set = new HashSet<T>();
+        set = new mySet<T>();
     }
 
     public int insert(T item){
