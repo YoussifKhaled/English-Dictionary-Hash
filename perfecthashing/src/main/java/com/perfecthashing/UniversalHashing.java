@@ -6,12 +6,12 @@ public class UniversalHashing {
     private int[][] matrix;
     private int b;
     private int u;
-    private int M;
+    // private int M;
 
     public UniversalHashing(int b, int u){
         this.b = b;
         this.u = u;
-        this.M = 1 << b;
+        // this.M = 1 << b;
         this.matrix = this.generateRandomMatrix();
     }
 
