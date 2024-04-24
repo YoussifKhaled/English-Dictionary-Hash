@@ -2,7 +2,6 @@ package com.perfecthashing;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
@@ -67,28 +66,7 @@ public class QuadraticPerfectHashing<T> implements PerfectHashing<T>{
         table = new ArrayList<>(Collections.nCopies(size, null));
     }
 
-
-    public static void main(String[] args) {
-        QuadraticPerfectHashing m = new QuadraticPerfectHashing(1000);
-        for (int i = 1; i <= 1000; i++) {
-            m.insert(i);
-            System.out.println(i);
-        }
-
-        for (int i = 1; i <= 500; i++) {
-            m.delete(i);
-        }
-        int sum = 0;
-        for (int i = 1; i <= 1000; i++) {
-            if (m.search(i)) sum++;
-        }
-        System.out.println(sum);
-    }
     public ArrayList<T> getElements(){
         return (ArrayList<T>) set.getList();
     }
-    
-    //return 1 ==> not exist in table
-    //return 3 ==> already in table
-
 }
