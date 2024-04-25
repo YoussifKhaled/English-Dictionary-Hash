@@ -88,10 +88,10 @@ public class LinearPerfectHashing<T> implements PerfectHashing<T>{
         tableSizes.put(0, size);  // size of the first-level table
         System.out.println("Size of first-level table: " + size);
         for (int i = 0; i < size; i++) {
-            //QuadraticPerfectHashing<T> secondLevelTable = secondLevelTables.get(i);
-            //int secondLevelSize = secondLevelTable.getSize();
-            //tableSizes.put(i + 1, secondLevelSize);  // size of each second-level table
-            //System.out.println("Size of second-level table " + (i + 1) + ": " + secondLevelSize);
+            ArrayList<T> secondLevelTable = secondLevelTables.get(i);
+            int secondLevelSize = secondLevelTable.size();
+            tableSizes.put(i + 1, secondLevelSize);  // size of each second-level table
+            System.out.println("Size of second-level table " + (i + 1) + ": " + secondLevelSize);
         }
         return tableSizes;
     }
