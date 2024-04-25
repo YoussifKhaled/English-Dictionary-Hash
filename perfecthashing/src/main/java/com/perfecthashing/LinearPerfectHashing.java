@@ -6,7 +6,6 @@ import java.util.Map;
 
 public class LinearPerfectHashing<T> implements PerfectHashing<T>{
     private UniversalHashing firstLevelHashFunction;
-    private ArrayList<T> set;
     private ArrayList<UniversalHashing> secondLevelHashFunctions;
     private ArrayList<ArrayList<T>> secondLevelTables;
     private int size;
@@ -25,7 +24,6 @@ public class LinearPerfectHashing<T> implements PerfectHashing<T>{
             }
         }
         size = N;
-        set = new ArrayList<>();
         rehashCount = 0;
     }
 
