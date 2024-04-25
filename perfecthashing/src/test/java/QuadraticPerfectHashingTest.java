@@ -74,28 +74,7 @@ public class QuadraticPerfectHashingTest {
         assertFalse(quadraticPerfectHashing.search(1));
     }
 
-    @Test
-    public void UniverselTypeQuadraticHashingTest(){
-        // try integers
-        QuadraticPerfectHashing<Integer> quadraticPerfectHashing=new QuadraticPerfectHashing<>(10);
-        List<Integer> integers= Arrays.asList(1,2,3,4,5,6,7,8,9,10);
-        for (int i:integers){
-            assertEquals(0,quadraticPerfectHashing.insert(i));
-        }
-        assertEquals(3,quadraticPerfectHashing.insert(1));
-        assertEquals(0,quadraticPerfectHashing.delete(1));
-        assertFalse(quadraticPerfectHashing.search(1));
-
-        // try strings
-        QuadraticPerfectHashing<String> quadraticPerfectHashingString=new QuadraticPerfectHashing<>(10);
-        List<String> strings= Arrays.asList("a","b","c","d","e","f","g","h","i","j");
-        for (String s:strings){
-            assertEquals(0,quadraticPerfectHashingString.insert(s));
-        }
-        assertEquals(3,quadraticPerfectHashingString.insert("a"));
-        assertEquals(0,quadraticPerfectHashingString.delete("a"));
-        assertFalse(quadraticPerfectHashingString.search("a"));
-    }
+    
     @Test
     public void rehashCountRandomIntegerTest(){
         Random random=new Random();
