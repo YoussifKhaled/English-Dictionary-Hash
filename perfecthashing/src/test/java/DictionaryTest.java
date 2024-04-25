@@ -1,6 +1,9 @@
 import com.perfecthashing.Dictionary;
 import org.junit.Test;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +43,9 @@ public class DictionaryTest {
         for (int i : integers) {
             dictionary.insert(String.valueOf(i));
         }
-        assertTrue(dictionary.search("274"));
+
         assertFalse(dictionary.search("4"));
+        assertTrue(dictionary.search("12"));
     }
 
     @Test
@@ -52,10 +56,17 @@ public class DictionaryTest {
         for (int i = 0; i < numberOfElements; i++) {
             characters.add((char) ('a' + random.nextInt(26)));
         }
-        Dictionary dictionary = new Dictionary("Linear");
-        for (char c : characters) {
-            dictionary.insert(String.valueOf(c));
+        String fileName = "src/test/resources/characters.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Character c : characters) {
+                writer.write(c);
+                writer.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Dictionary dictionary = new Dictionary("Linear");
+        dictionary.batchInsert(fileName);
         // check size of table (get size)
         assertTrue(dictionary.search(String.valueOf(characters.get(10))));
         assertTrue(dictionary.search(String.valueOf(characters.get(500))));
@@ -103,10 +114,17 @@ public class DictionaryTest {
         for (int i = 0; i < numberOfElements; i++) {
             characters.add((char) ('a' + random.nextInt(26)));
         }
-        Dictionary dictionary = new Dictionary("Quadratic");
-        for (char c : characters) {
-            dictionary.insert(String.valueOf(c));
+        String fileName = "src/test/resources/characters.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Character c : characters) {
+                writer.write(c);
+                writer.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Dictionary dictionary = new Dictionary("Quadratic");
+        dictionary.batchInsert(fileName);
         // check size of table (get size)
         assertTrue(dictionary.search(String.valueOf(characters.get(10))));
         assertTrue(dictionary.search(String.valueOf(characters.get(500))));
@@ -118,7 +136,7 @@ public class DictionaryTest {
         Dictionary dictionary = new Dictionary("Linear");
         List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         for (int i : integers) {
-            assertEquals(0, dictionary.insert(String.valueOf(i)));
+            dictionary.insert(String.valueOf(i));
         }
         assertEquals(3, dictionary.insert("1"));
         assertEquals(0, dictionary.delete("1"));

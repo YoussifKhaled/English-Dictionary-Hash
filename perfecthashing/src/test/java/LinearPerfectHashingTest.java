@@ -1,4 +1,5 @@
 import com.perfecthashing.LinearPerfectHashing;
+import com.perfecthashing.QuadraticPerfectHashing;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -94,6 +95,34 @@ public class LinearPerfectHashingTest {
         assertEquals(3,linearPerfectHashingString.insert("a"));
         assertEquals(0,linearPerfectHashingString.delete("a"));
         assertFalse(linearPerfectHashingString.search("a"));
-        
+
+    }
+    @Test
+    public void rehashCountRandomStringTest(){
+        Random random=new Random();
+        ArrayList<Integer>sizes=new ArrayList<>(Arrays.asList(50,200,2000,4000,6000,10000));
+        for(int numberOfElements: sizes) {
+            LinearPerfectHashing<String> linearPerfectHashing
+                    = new LinearPerfectHashing<>(numberOfElements);
+            ArrayList<String> strings = new ArrayList<>();
+            for (int i = 0; i < numberOfElements; i++) {
+                int randomLength= random.nextInt(9);
+                String str="";
+                for (int j = 0; j < randomLength; j++) {
+                    String tmp= "a"+random.nextInt(26);
+                    str=str.concat(tmp);
+                }
+                strings.add(str);
+            }
+            long startTime = System.currentTimeMillis();
+            for (String str : strings) {
+                linearPerfectHashing.insert(str);
+            }
+            long endTime = System.currentTimeMillis();
+            System.out.println("size: "+numberOfElements);
+            System.out.println("time " + (endTime - startTime));
+            System.out.println("spaces " + linearPerfectHashing.getTableSizes());
+            System.out.println("rehash count " + linearPerfectHashing.getRehashCount());
+        }
     }
 }

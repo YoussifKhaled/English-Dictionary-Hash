@@ -97,22 +97,32 @@ public class QuadraticPerfectHashingTest {
         assertFalse(quadraticPerfectHashingString.search("a"));
     }
     @Test
-    public void rehashCountRandomIntegerTest(){
+    public void rehashCountRandomStringTest(){
         Random random=new Random();
-        int numberOfElements=5000;
-        QuadraticPerfectHashing<Integer> quadraticPerfectHashing
-                =new QuadraticPerfectHashing<>(5000);
-        ArrayList<Integer>integers=new ArrayList<>();
-        for (int i=0;i<numberOfElements;i++){
-            integers.add(random.nextInt());
+        ArrayList<Integer>sizes=new ArrayList<>(Arrays.asList(50,200,2000,4000,6000,10000));
+        for(int numberOfElements: sizes) {
+            QuadraticPerfectHashing<String> quadraticPerfectHashing
+                    = new QuadraticPerfectHashing<>(numberOfElements);
+            ArrayList<String> strings = new ArrayList<>();
+            for (int i = 0; i < numberOfElements; i++) {
+                int randomLength= random.nextInt(9);
+                String str="";
+                for (int j = 0; j < randomLength; j++) {
+                    String tmp= "a"+random.nextInt(26);
+                    str=str.concat(tmp);
+                }
+                strings.add(str);
+            }
+            long startTime = System.currentTimeMillis();
+            for (String str : strings) {
+                quadraticPerfectHashing.insert(str);
+            }
+            long endTime = System.currentTimeMillis();
+            System.out.println("size: "+numberOfElements);
+            System.out.println("time " + (endTime - startTime));
+            System.out.println("spaces " + quadraticPerfectHashing.getSize());
+            System.out.println("rehash count " + quadraticPerfectHashing.getRehashCount());
         }
-        long startTime=System.currentTimeMillis();
-        for (int i:integers){
-            quadraticPerfectHashing.insert(i);
-        }
-        long endTime=System.currentTimeMillis();
-        System.out.println("time "+(endTime-startTime));
-        System.out.println("rehash count "+quadraticPerfectHashing.getRehashCount());
 
     }
 }

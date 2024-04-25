@@ -19,7 +19,7 @@ public class LinearPerfectHashing<T> implements PerfectHashing<T>{
             UniversalHashing secondLevelHashFunction = new UniversalHashing(32, 32);
             secondLevelHashFunctions.add(secondLevelHashFunction);
             secondLevelTables.add(new ArrayList<>());
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 10; j++) {
                 secondLevelTables.get(i).add(null);
             }
         }
@@ -53,6 +53,7 @@ public class LinearPerfectHashing<T> implements PerfectHashing<T>{
                 secondLevelTable.set(secondLevelHash, x);
             }
             rehashCount++;
+            return 0;
         }
         return 3; //inserted before
     }
@@ -71,7 +72,7 @@ public class LinearPerfectHashing<T> implements PerfectHashing<T>{
     }
     
     public boolean search(T item){
-        int firstLevelHash = firstLevelHashFunction.hash(StringUtls.getStringKey(item.toString())) % size;
+        int firstLevelHash = firstLevelHashFunction.hash(item.hashCode()) % size;
         ArrayList<T> secondLevelTable = secondLevelTables.get(firstLevelHash);
         UniversalHashing secondLevelHashFunction = secondLevelHashFunctions.get(firstLevelHash);
         int secondLevelTableSize=secondLevelTable.size();
@@ -83,15 +84,14 @@ public class LinearPerfectHashing<T> implements PerfectHashing<T>{
         return rehashCount;
     }
 
-    public Map<Integer, Integer> getTableSizes() {
-        Map<Integer, Integer> tableSizes = new HashMap<>();
-        tableSizes.put(0, size);  // size of the first-level table
-        System.out.println("Size of first-level table: " + size);
+    public int getTableSizes() {
+        int tableSizes = 0;
+        tableSizes+=size;  // size of the first-level table
         for (int i = 0; i < size; i++) {
-            //QuadraticPerfectHashing<T> secondLevelTable = secondLevelTables.get(i);
-            //int secondLevelSize = secondLevelTable.getSize();
-            //tableSizes.put(i + 1, secondLevelSize);  // size of each second-level table
-            //System.out.println("Size of second-level table " + (i + 1) + ": " + secondLevelSize);
+            ArrayList<T> secondLevelTable = secondLevelTables.get(i);
+            int secondLevelSize = secondLevelTable.size();
+            tableSizes +=secondLevelSize;
+
         }
         return tableSizes;
     }
